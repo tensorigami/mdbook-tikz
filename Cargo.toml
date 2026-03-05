@@ -1,0 +1,25 @@
+[package]
+name = "mdbook-tikz"
+version = "0.1.0"
+edition = "2021"
+description = "mdBook preprocessor that renders TikZ and tikzcd diagrams to inline SVG"
+authors = ["tensorigami"]
+license = "MIT"
+repository = "https://github.com/tensorigami/mdbook-tikz"
+keywords = ["mdbook", "tikz", "latex", "svg", "preprocessor"]
+categories = ["command-line-utilities", "text-processing"]
+readme = "README.md"
+
+[lib]
+name = "mdbook_tikz"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mdbook-tikz"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+regex = "1"
