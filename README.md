@@ -32,13 +32,19 @@ A \arrow[r, "f"] \arrow[d, "g"'] & B \arrow[d, "h"] \\
 C \arrow[r, "k"'] & D
 \end{tikzcd}
 $$
+```
 
+<p align="center"><img src="examples/tikzcd.svg" alt="tikzcd example" width="140"/></p>
+
+```markdown
 $$
 \begin{tikzpicture}
 \draw (0,0) -- (1,1) -- (2,0) -- cycle;
 \end{tikzpicture}
 $$
 ```
+
+<p align="center"><img src="examples/tikzpicture.svg" alt="tikzpicture example" width="80"/></p>
 
 The preprocessor detects `$$\begin{tikzcd}...\end{tikzcd}$$` and `$$\begin{tikzpicture}...\end{tikzpicture}$$` blocks, compiles them to PDF via tectonic/pdflatex, converts to SVG via pdf2svg, and inlines the SVG directly in the HTML output.
 
@@ -47,7 +53,7 @@ The preprocessor detects `$$\begin{tikzcd}...\end{tikzcd}$$` and `$$\begin{tikzp
 ```toml
 [preprocessor.tikz]
 command = "mdbook-tikz"
-preamble = "\\usepackage{amsmath}"   # extra LaTeX preamble
+preamble = "\\usepackage{amsmath}"    # extra LaTeX preamble
 tex_command = "tectonic"              # override TeX engine (default: auto-detect)
 pdf2svg_command = "pdf2svg"           # override converter (default: pdf2svg)
 ```
