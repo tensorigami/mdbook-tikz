@@ -34,7 +34,10 @@ C \arrow[r, "k"'] & D
 $$
 ```
 
-<p align="center"><img src="examples/tikzcd.svg" alt="tikzcd example" width="140"/></p>
+<p align="center"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="examples/tikzcd-dark.svg">
+  <img src="examples/tikzcd-light.svg" alt="tikzcd example" width="140">
+</picture></p>
 
 ```markdown
 $$
@@ -44,7 +47,10 @@ $$
 $$
 ```
 
-<p align="center"><img src="examples/tikzpicture.svg" alt="tikzpicture example" width="80"/></p>
+<p align="center"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="examples/tikzpicture-dark.svg">
+  <img src="examples/tikzpicture-light.svg" alt="tikzpicture example" width="80">
+</picture></p>
 
 The preprocessor detects `$$\begin{tikzcd}...\end{tikzcd}$$` and `$$\begin{tikzpicture}...\end{tikzpicture}$$` blocks, compiles them to PDF via tectonic/pdflatex, converts to SVG via pdf2svg, and inlines the SVG directly in the HTML output.
 
