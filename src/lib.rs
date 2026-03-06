@@ -8,7 +8,7 @@ use std::process::Command;
 /// the LaTeX coordinate system and the HTML font-size inheritance.
 const BASE_PT: f64 = 10.0;
 
-pub const TIKZ_STYLE: &str = "display:flex;justify-content:center;margin:1em 0";
+pub const TIKZ_STYLE: &str = "margin:1em 0";
 
 /// Wrap rendered SVG in a self-styled HTML container.
 pub fn wrap_svg_html(svg: &str) -> String {
@@ -139,6 +139,7 @@ fn run_pdf2svg(cmd: &str, pdf_path: &Path, work_dir: &Path) -> Result<String, St
 fn postprocess_svg(svg: &str) -> String {
     let svg = strip_xml_declaration(svg);
     let svg = svg
+        .replace("<svg", "<svg style=\"display:block;margin:0 auto\"")
         .replace("fill=\"rgb(0%, 0%, 0%)\"", "fill=\"currentColor\"")
         .replace("stroke=\"rgb(0%, 0%, 0%)\"", "stroke=\"currentColor\"")
         .replace("fill=\"#000000\"", "fill=\"currentColor\"")
