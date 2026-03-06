@@ -3,6 +3,11 @@ use std::fs;
 use std::path::Path;
 use std::process::Command;
 
+/// LaTeX base font size. The standalone documentclass and the pt→em
+/// conversion must agree on this value — it is the bridge between
+/// the LaTeX coordinate system and the HTML font-size inheritance.
+const BASE_PT: f64 = 10.0;
+
 pub const TIKZ_STYLE: &str = "display:block;text-align:center;margin:1em 0";
 
 /// Wrap rendered SVG in a self-styled HTML container.
@@ -40,7 +45,7 @@ pub fn wrap_tikz_latex(source: &str, kind: &str, preamble: &str) -> String {
     };
 
     format!(
-        "\\documentclass[crop,tikz]{{standalone}}\n\
+        "\\documentclass[crop,tikz,border=2pt,{BASE_PT:.0}pt]{{standalone}}\n\
          \\usepackage{{tikz-cd}}{extra}\n\
          \\usepackage[T1]{{fontenc}}\n\
          \\usepackage{{lmodern}}\n\
@@ -134,7 +139,6 @@ fn run_pdf2svg(cmd: &str, pdf_path: &Path, work_dir: &Path) -> Result<String, St
 fn postprocess_svg(svg: &str) -> String {
     let svg = strip_xml_declaration(svg);
     let svg = svg
-        .replace("<svg", "<svg overflow=\"visible\"")
         .replace("fill=\"rgb(0%, 0%, 0%)\"", "fill=\"currentColor\"")
         .replace("stroke=\"rgb(0%, 0%, 0%)\"", "stroke=\"currentColor\"")
         .replace("fill=\"#000000\"", "fill=\"currentColor\"")
@@ -150,7 +154,7 @@ fn pt_to_em(svg: &str) -> String {
     re.replace_all(svg, |caps: &regex::Captures| {
         let attr = &caps[1];
         let val: f64 = caps[2].parse().unwrap_or(0.0);
-        format!("{}=\"{:.3}em\"", attr, val / 10.0)
+        format!("{}=\"{:.3}em\"", attr, val / BASE_PT)
     })
     .into_owned()
 }
