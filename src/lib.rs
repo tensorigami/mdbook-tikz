@@ -134,6 +134,7 @@ fn run_pdf2svg(cmd: &str, pdf_path: &Path, work_dir: &Path) -> Result<String, St
 fn postprocess_svg(svg: &str) -> String {
     let svg = strip_xml_declaration(svg);
     let svg = svg
+        .replace("<svg", "<svg overflow=\"visible\"")
         .replace("fill=\"rgb(0%, 0%, 0%)\"", "fill=\"currentColor\"")
         .replace("stroke=\"rgb(0%, 0%, 0%)\"", "stroke=\"currentColor\"")
         .replace("fill=\"#000000\"", "fill=\"currentColor\"")
