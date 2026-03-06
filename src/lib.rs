@@ -169,7 +169,7 @@ fn strip_clip_paths(svg: &str) -> String {
 /// LaTeX compiles at 10pt (standalone default). Dividing by 10 maps
 /// diagram text to 1em — so the diagram inherits the HTML font-size.
 fn pt_to_em(svg: &str) -> String {
-    let re = regex::Regex::new(r#"(width|height)="([0-9.]+)pt""#).unwrap();
+    let re = regex::Regex::new(r#"(width|height)="([0-9.]+)(?:pt)?""#).unwrap();
     re.replace_all(svg, |caps: &regex::Captures| {
         let attr = &caps[1];
         let val: f64 = caps[2].parse().unwrap_or(0.0);
