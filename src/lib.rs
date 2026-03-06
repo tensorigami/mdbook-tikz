@@ -45,6 +45,7 @@ pub fn wrap_tikz_latex(source: &str, kind: &str, preamble: &str) -> String {
          \\usepackage[T1]{{fontenc}}\n\
          \\usepackage{{lmodern}}\n\
          \\DeclareMathAlphabet{{\\mathtt}}{{T1}}{{lmtt}}{{b}}{{n}}\n\
+         \\everymath{{\\displaystyle}}\n\
          \\begin{{document}}\n\
          {body}\n\
          \\end{{document}}\n"
@@ -132,10 +133,25 @@ fn run_pdf2svg(cmd: &str, pdf_path: &Path, work_dir: &Path) -> Result<String, St
 
 fn postprocess_svg(svg: &str) -> String {
     let svg = strip_xml_declaration(svg);
-    svg.replace("fill=\"rgb(0%, 0%, 0%)\"", "fill=\"currentColor\"")
+    let svg = svg
+        .replace("fill=\"rgb(0%, 0%, 0%)\"", "fill=\"currentColor\"")
         .replace("stroke=\"rgb(0%, 0%, 0%)\"", "stroke=\"currentColor\"")
         .replace("fill=\"#000000\"", "fill=\"currentColor\"")
-        .replace("stroke=\"#000000\"", "stroke=\"currentColor\"")
+        .replace("stroke=\"#000000\"", "stroke=\"currentColor\"");
+    pt_to_em(&svg)
+}
+
+/// Convert SVG dimensions from absolute pt to relative em.
+/// LaTeX compiles at 10pt (standalone default). Dividing by 10 maps
+/// diagram text to 1em — so the diagram inherits the HTML font-size.
+fn pt_to_em(svg: &str) -> String {
+    let re = regex::Regex::new(r#"(width|height)="([0-9.]+)pt""#).unwrap();
+    re.replace_all(svg, |caps: &regex::Captures| {
+        let attr = &caps[1];
+        let val: f64 = caps[2].parse().unwrap_or(0.0);
+        format!("{}=\"{:.3}em\"", attr, val / 10.0)
+    })
+    .into_owned()
 }
 
 fn strip_xml_declaration(svg: &str) -> &str {
