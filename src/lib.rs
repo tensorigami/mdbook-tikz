@@ -138,13 +138,27 @@ fn run_pdf2svg(cmd: &str, pdf_path: &Path, work_dir: &Path) -> Result<String, St
 
 fn postprocess_svg(svg: &str) -> String {
     let svg = strip_xml_declaration(svg);
+    let svg = strip_clip_paths(svg);
     let svg = svg
-        .replace("<svg", "<svg style=\"display:block;margin:0 auto\"")
+        .replace("<svg", "<svg style=\"display:block;margin:0 auto;overflow:visible\"")
         .replace("fill=\"rgb(0%, 0%, 0%)\"", "fill=\"currentColor\"")
         .replace("stroke=\"rgb(0%, 0%, 0%)\"", "stroke=\"currentColor\"")
         .replace("fill=\"#000000\"", "fill=\"currentColor\"")
         .replace("stroke=\"#000000\"", "stroke=\"currentColor\"");
     pt_to_em(&svg)
+}
+
+/// Remove clip paths — they're page-boundary artifacts from pdf2svg.
+/// tikzcd arrow labels can extend past the standalone page; the clip
+/// paths hide that content. In HTML context they serve no purpose.
+fn strip_clip_paths(svg: &str) -> String {
+    let svg = regex::Regex::new(r"(?s)<clipPath[^>]*>.*?</clipPath>")
+        .unwrap()
+        .replace_all(svg, "");
+    regex::Regex::new(r#"\s*clip-path="[^"]*""#)
+        .unwrap()
+        .replace_all(&svg, "")
+        .into_owned()
 }
 
 /// Convert SVG dimensions from absolute pt to relative em.
