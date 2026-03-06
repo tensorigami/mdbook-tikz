@@ -8,6 +8,10 @@ use std::process::Command;
 /// the LaTeX coordinate system and the HTML font-size inheritance.
 const BASE_PT: f64 = 10.0;
 
+/// KaTeX renders display math at 1.21em (TeX fonts need this scaling
+/// to look proportionate next to web fonts). Our diagrams must match.
+const KATEX_SCALE: f64 = 1.21;
+
 pub const TIKZ_STYLE: &str = "margin:1em 0";
 
 /// Wrap rendered SVG in a self-styled HTML container.
@@ -169,7 +173,7 @@ fn pt_to_em(svg: &str) -> String {
     re.replace_all(svg, |caps: &regex::Captures| {
         let attr = &caps[1];
         let val: f64 = caps[2].parse().unwrap_or(0.0);
-        format!("{}=\"{:.3}em\"", attr, val / BASE_PT)
+        format!("{}=\"{:.3}em\"", attr, val / BASE_PT * KATEX_SCALE)
     })
     .into_owned()
 }
