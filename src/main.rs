@@ -1,4 +1,4 @@
-use mdbook_tikz::{compile_tikz, detect_tex_engine, wrap_tikz_latex};
+use mdbook_tikz::{compile_tikz, detect_tex_engine, wrap_svg_html, wrap_tikz_latex};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -122,7 +122,7 @@ fn process_content(content: &str, cfg: &Config) -> String {
         let latex = wrap_tikz_latex(&block.content, kind, &cfg.preamble);
         let replacement =
             match compile_tikz(&latex, &cfg.cache_dir, &cfg.tex_command, &cfg.pdf2svg_command) {
-                Ok(svg) => format!("<div class=\"tikz\">{svg}</div>"),
+                Ok(svg) => wrap_svg_html(&svg),
                 Err(e) => format!(
                     "<pre class=\"tikz-error\" style=\"color:red;white-space:pre-wrap\">{}</pre>",
                     html_escape(&e)

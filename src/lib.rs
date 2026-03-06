@@ -5,6 +5,12 @@ use std::process::Command;
 
 pub const TEX_FONT_SIZE: &str = "12pt";
 pub const SVG_SCALE_FACTOR: f64 = 1.5;
+pub const TIKZ_STYLE: &str = "display:block;text-align:center;margin:1em 0";
+
+/// Wrap rendered SVG in a self-styled HTML container.
+pub fn wrap_svg_html(svg: &str) -> String {
+    format!("<div style=\"{TIKZ_STYLE}\">{svg}</div>")
+}
 
 /// Returns the first available TeX engine, or None.
 pub fn detect_tex_engine() -> Option<String> {
