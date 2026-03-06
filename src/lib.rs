@@ -8,7 +8,7 @@ use std::process::Command;
 /// the LaTeX coordinate system and the HTML font-size inheritance.
 const BASE_PT: f64 = 10.0;
 
-pub const TIKZ_STYLE: &str = "display:block;text-align:center;margin:1em 0";
+pub const TIKZ_STYLE: &str = "display:flex;justify-content:center;margin:1em 0";
 
 /// Wrap rendered SVG in a self-styled HTML container.
 pub fn wrap_svg_html(svg: &str) -> String {
